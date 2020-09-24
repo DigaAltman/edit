@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>edit</artifactId>
+        <groupId>cn.bbzzzs</groupId>
+        <version>0.0.1.RELEASE</version>
+    </parent>
+    <description>这个模块是简化DB操作的模块, 用户只需要通过传入Connection就可以获得DB对象, 从而操作数据库. 并且完成自动映射</description>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>db</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>cn.bbzzzs</groupId>
+            <artifactId>xml</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.bbzzzs</groupId>
+            <artifactId>test</artifactId>
+            <version>0.0.1.RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

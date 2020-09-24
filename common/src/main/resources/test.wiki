@@ -1,0 +1,125 @@
+Teacher1$1390 - [1, '龙文章', 1, course$1410]
+    Course1$1410 - [1, '炮灰团', 1, [student$1440]]
+        Student1$1440 - [1, '死啦死啦', 0, '察哈尔河', 1, 1, teacher1$1390]
+
+Teacher1$1391 - [1, '龙文章', 1, course$1413]
+    Course1$1413 - [1, '炮灰团', 1, [student$1450]]
+        Student2$1450 - [2, '孟烦了', 0, '禅达', 1, 1, teacher1$1391]
+
+Teacher1$1392 - [1, '龙文章', 1, course$1416]
+    Course1$1416 - [1, '炮灰团', 1, [student$1462]]
+        Student3$1462 - [3, '林译', 0, '上海', 1, 1, teacher$1392]
+
+Teacher2$1393 - [2, '虞啸卿', 1, course$1419]
+    Course2$1419 - [2, '虞师', 1, [student$1469]]
+        Student4$1469 - [4, '何书光', 0, '东北', 1, 1, teacher$1393]
+
+Teacher2$1394 - [2, '虞啸卿', 1, course$1422]
+    Course2$1422 - [2, '虞师', 1, [student$1473]]
+        Student5$1473 - [5, '张立宪', 0, '四川', 1, 1, teacher$1394]
+
+
+
+		Step3:
+			alreadyReadMapList [ Teacher.class, Course.class, Student.class]
+			childList = [
+				Teacher1$1390 - [1, '龙文章', 1, course$1410]
+				    Course1$1410 - [1, '炮灰团', 1, [student$1440]]
+				        Student1$1440 - [1, '死啦死啦', 0, '察哈尔河', 1, 1, teacher1$1390]
+
+				Teacher1$1391 - [1, '龙文章', 1, course$1413]
+				    Course1$1413 - [1, '炮灰团', 1, [student$1450]]
+				        Student2$1450 - [2, '孟烦了', 0, '禅达', 1, 1, teacher1$1391]
+
+				Teacher1$1392 - [1, '龙文章', 1, course$1416]
+				    Course1$1416 - [1, '炮灰团', 1, [student$1462]]
+				        Student3$1462 - [3, '林译', 0, '上海', 1, 1, teacher$1392]
+
+				Teacher2$1393 - [2, '虞啸卿', 1, course$1419]
+				    Course2$1419 - [2, '虞师', 1, [student$1469]]
+				        Student4$1469 - [4, '何书光', 0, '东北', 1, 1, teacher$1393]
+
+				Teacher2$1394 - [2, '虞啸卿', 1, course$1422]
+				    Course2$1422 - [2, '虞师', 1, [student$1473]]
+				        Student5$1473 - [5, '张立宪', 0, '四川', 1, 1, teacher$1394]
+			]
+
+
+			objectMap = {
+				'id=1&name=龙文章&version=1', Teacher1$1390,
+				'id=2&name=虞啸卿&version=2', Teacher2$1393
+			},
+
+			list = [
+			    Student1$1440 - [1, '死啦死啦', 0, '察哈尔河', 1, 1, Teacher1$1390],
+	        	Student2$1450 - [2, '孟烦了', 0, '禅达', 1, 1, Teacher1$1390],
+	        	Student3$1462 - [3, '林译', 0, '上海', 1, 1, Teacher1$1390],
+	        	Student4$1469 - [4, '何书光', 0, '东北', 1, 1, Teacher2$1393],
+	        	Student5$1473 - [5, '张立宪', 0, '四川', 1, 1, Teacher2$1393]
+			]
+
+			teacherMap = {
+				'id=1&name=死啦死啦&sex=0&address=察哈尔河', Student1$1440,
+				'id=2&name=孟烦了&sex=0&address=禅达', Student2$1450,
+				'id=2&name=林译&sex=0&address=上海', Student3$1462,
+				'id=2&name=何书光&sex=0&address=东北',Student4$1469,
+				'id=2&name=张立宪&sex=0&address=四川',Student5$1473
+			}
+
+			return [
+				Student1$1440,
+				Student2$1450,
+				Student3$1462,
+				Student4$1469,
+				Student5$1473
+			]
+
+
+
+
+Step2:
+		alreadyReadMapList [ Teacher.class, Course.class ]
+		childList = [
+		    Student1$1440 - [1, '死啦死啦', 0, '察哈尔河', 1, 1, teacher1$1390],
+        	Student2$1450 - [2, '孟烦了', 0, '禅达', 1, 1, teacher1$1391],
+        	Student3$1462 - [3, '林译', 0, '上海', 1, 1, teacher$1392],
+        	Student4$1469 - [4, '何书光', 0, '东北', 1, 1, teacher$1393],
+        	Student5$1473 - [5, '张立宪', 0, '四川', 1, 1, teacher$1394]
+		]
+
+		res = [
+		    Student1$1440 - [1, '死啦死啦', 0, '察哈尔河', 1, 1, teacher1$1390],
+	    	Student2$1450 - [2, '孟烦了', 0, '禅达', 1, 1, teacher1$1390],
+	    	Student3$1462 - [3, '林译', 0, '上海', 1, 1, teacher$1390],
+	    	Student4$1469 - [4, '何书光', 0, '东北', 1, 1, teacher$1393],
+	    	Student5$1473 - [5, '张立宪', 0, '四川', 1, 1, teacher$1393]
+		]
+
+		teacherMap = {
+			'id=1&name=炮灰团&version=1': Course1$1410,
+			'id=2&name=虞师&version=1': Course2$1419
+		}
+
+		tMap = {
+			'id=1&name=炮灰团&version=1': [
+				Student1$1440 - [1, '死啦死啦', 0, '察哈尔河', 1, 1, teacher1$1390],
+				Student2$1450 - [2, '孟烦了', 0, '禅达', 1, 1, teacher1$1390],
+				Student3$1462 - [3, '林译', 0, '上海', 1, 1, teacher$1390]
+			],
+			'id=2&name=虞师&version=1': [
+				Student4$1469 - [4, '何书光', 0, '东北', 1, 1, teacher$1393],
+				Student5$1473 - [5, '张立宪', 0, '四川', 1, 1, teacher$1393]
+			]
+		}
+
+		return [
+			Course1$1410: [
+				Student1$1440 - [1, '死啦死啦', 0, '察哈尔河', 1, 1, teacher1$1390],
+				Student2$1450 - [2, '孟烦了', 0, '禅达', 1, 1, teacher1$1390],
+				Student3$1462 - [3, '林译', 0, '上海', 1, 1, teacher$1390]
+			],
+			Course2$1419: [
+				Student4$1469 - [4, '何书光', 0, '东北', 1, 1, teacher$1393],
+				Student5$1473 - [5, '张立宪', 0, '四川', 1, 1, teacher$1393]
+			]
+		]

@@ -1,0 +1,78 @@
+1对1循环依赖解决方案:
+    通过一个存放临时状态的集合来解决这个问题
+
+    Set<Class> needInitClassSet = new HashSet();
+    Map<Class, Object> beforeSuccessClassSet = new HashMap();
+    Map<Class, Object> successInitClassMap = new HashMap();
+
+    将需要填充的依赖放入到 needInitClassSet 中, 然后开始初始化对象.
+
+    首先,我们将所有的需要初始化的依赖都翻入到needInitClassSet中,因为它是一个Set,所以可以去重
+
+    然后我们基于needInitClassSet中的所有类,初始化一个最终的空对象(解决循环引用问题). 然后存入到beforeSuccessClassSet中
+
+    然后我们就可以根绝needInitClassSet做最后一次真正的实例化操作, 首先从beforeSuccessClassSet中取出自生对应实例元素(successInitClassMap不存在对应key情况下), 然后判断当前类中是否存在其他类引用, 如果存在, 重复此操作. 最后在进行反射赋值或调用set方法来进行互相赋值就可以解决循环引用了
+
+
+
+1对多依赖解决方案:
+
+    映射实体类:
+
+    @Data
+    public class Course {
+        private int courseId;
+
+        private String courseName;
+
+        private List<Student> student;
+    }
+
+    查询sql语句:
+
+    SELECT c.course_id, c.course_name, s.student_id, s.student_name FROM course c LEFT JOIN student s ON c.course_id = s.course_id;
+
+    course_id       course_name     student_id      student_name
+        1               三年2班           1                李子明
+        1               三年2班           2                二狗蛋
+        1               三年2班           3                喜羊羊
+
+
+    当我们没有配置映射关系的时候,默认存在一种映射关系:
+    <resultMap id="com.example.pojo.Course" type="com.example.pojo.Course">
+        <property column="course_id" property="courseId"/>
+        <property column="course_name" property="courseName"/>
+        <list property="student" resultMap="com.example.pojo.Student"></list>
+    </resultMap>
+
+    <resultMap id="com.example.pojo.Student" type="com.example.pojo.Student">
+        <property column="student_id" property="studentId"/>
+        <property column="student_name" property="studentName"/>
+        <bean property="course_id" resultMap="com.example.pojo.Course"></bean>
+    </resultMap>
+
+
+    当我们将查询结果转换为List<Course>时, 我们首先先从ResultMap中获取Course类默认的查询对应的ResultMap, 如果
+    找不到,则生成这套默认的配置(为了后面整合用户的自定义映射规则配置,进行统一开发).
+
+    生成后,首先检查是否存在一对多关联关系, 上面的肯定存在.并且它没有指定id和list映射, 我们就可以将所有的property组成一个id
+
+    Map<String, List<Student>> keyCollections = new HashMap();
+
+    然后我们将结果添加进去:
+    '1-三年2班'
+        |
+        +--------------[1, '李子明']
+        |
+        +--------------[2, '二狗蛋']
+        |
+        +--------------[3, '喜羊羊']
+
+    此时我们发现, Student中也存在一个bean映射,怎么办呢? 循环解析就对了. 进入一对一循环映射逻辑.
+
+
+    我们继续看一对多重点, 然后我们在将 1-三年2班 转换为Course对象, 或者循环遍历结果, 转换为Course对象存入到Set中,
+    然后再根据 对象 -> key 进行比较, 相同则将对应的List填充到Course中
+
+
+
