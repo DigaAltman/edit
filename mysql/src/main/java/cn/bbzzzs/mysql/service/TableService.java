@@ -5,34 +5,28 @@ import cn.bbzzzs.db.factory.DB;
 import cn.bbzzzs.db.factory.DBFactory;
 import cn.bbzzzs.mysql.common.DaoEnum;
 import cn.bbzzzs.mysql.factotry.ConnectionFactory;
+import cn.bbzzzs.mysql.handler.dao.DaoHandler;
 import cn.bbzzzs.mysql.pojo.*;
 import cn.bbzzzs.mysql.repositoy.TableDao;
 import cn.bbzzzs.mysql.vo.TableDetailVo;
 import com.google.common.collect.Lists;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtField;
-import javassist.bytecode.AnnotationsAttribute;
-import javassist.bytecode.ConstPool;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class TableService {
 
     /**
-     * 动态代理类的缓存容器
+     * Mapper层代码生成具体实现容器
      */
-    private static final ClassPool classPool = ClassPool.getDefault();
+    private static final Map<DaoEnum, DaoHandler> daoEnumDaoHandlerMap = new HashMap();
+    static {
+    }
 
     @Autowired
     private TableDao tableDao;
@@ -236,9 +230,11 @@ public class TableService {
 
     /**
      * 基于表结构生成 Repository/ Mapper / Dao 层
+     * TODO 暂时还没有实现
      */
     public String generateRepository(DataBase dataBase, String name, String daoName) {
         DaoEnum daoEnum = DaoEnum.valueOf(daoName);
+
         return null;
     }
 

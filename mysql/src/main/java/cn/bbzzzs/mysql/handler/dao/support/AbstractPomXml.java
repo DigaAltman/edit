@@ -4,17 +4,21 @@ import cn.bbzzzs.common.util.StringUtils;
 import cn.bbzzzs.mysql.handler.dao.DaoHandler;
 import cn.bbzzzs.mysql.pojo.DataBase;
 import com.google.common.collect.Lists;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Pom.xml 依赖
+ * 关于不同的 pom.xml 的抽象实现
  */
-public abstract class PomXmlHandler implements DaoHandler {
+@Data
+@Accessors(chain = true)
+public abstract class AbstractPomXml implements DaoHandler {
 
-    private DaoHandler daoHandler;
+    protected DaoHandler daoHandler;
 
     @Override
     public Map<String, List> handle(DataBase dataBase, String tableName) {

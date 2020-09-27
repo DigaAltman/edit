@@ -1,10 +1,9 @@
-package cn.bbzzzs.mysql.handler.dao.support.support;
+package cn.bbzzzs.mysql.handler.dao.support.pom.mybatisplus;
 
 import cn.bbzzzs.common.util.StringUtils;
-import cn.bbzzzs.mysql.handler.dao.support.PomXmlHandler;
+import cn.bbzzzs.mysql.handler.dao.support.AbstractPomXml;
 
-public class MybatisPlusPomXmlHandler extends PomXmlHandler {
-
+public class Pom extends AbstractPomXml {
     @Override
     protected void mapperDependencies(StringUtils.SBuilder sb) {
         sb.build("        <!-- 配置 mybatis-plus -->\n");

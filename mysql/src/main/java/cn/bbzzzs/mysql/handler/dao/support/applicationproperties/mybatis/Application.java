@@ -1,9 +1,9 @@
-package cn.bbzzzs.mysql.handler.dao.support.support;
+package cn.bbzzzs.mysql.handler.dao.support.applicationproperties.mybatis;
 
 import cn.bbzzzs.common.util.StringUtils;
-import cn.bbzzzs.mysql.handler.dao.support.ApplicationPropertiesHandler;
+import cn.bbzzzs.mysql.handler.dao.support.AbstractApplicationProperties;
 
-public class MybatisApplicationPropertiesHandler extends ApplicationPropertiesHandler {
+public class Application extends AbstractApplicationProperties {
 
     @Override
     protected void mapperApplication(StringUtils.SBuilder sb) {

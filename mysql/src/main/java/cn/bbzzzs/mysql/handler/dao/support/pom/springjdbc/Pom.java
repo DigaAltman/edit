@@ -1,10 +1,9 @@
-package cn.bbzzzs.mysql.handler.dao.support.support;
+package cn.bbzzzs.mysql.handler.dao.support.pom.springjdbc;
 
 import cn.bbzzzs.common.util.StringUtils;
-import cn.bbzzzs.mysql.handler.dao.support.PomXmlHandler;
+import cn.bbzzzs.mysql.handler.dao.support.AbstractPomXml;
 
-public class SpringJdbcPomXmlHandler extends PomXmlHandler {
-
+public class Pom extends AbstractPomXml {
     @Override
     protected void mapperDependencies(StringUtils.SBuilder sb) {
         sb.build("        <!-- spring-jdbc -->\n");

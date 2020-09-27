@@ -12,13 +12,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 解决了 application.properties 的配置
+ * 关于不同的 application.properties 的抽象实现
  */
-public abstract class ApplicationPropertiesHandler implements DaoHandler {
+public abstract class AbstractApplicationProperties implements DaoHandler {
 
     @Setter
     private DaoHandler daoHandler;
 
+    /**
+     * 处理 application.properties 中的通用配置
+     * @param dataBase  数据库对象
+     * @param tableName 表名称
+     * @return
+     */
     @Override
     public Map<String, List> handle(DataBase dataBase, String tableName) {
         Map<String, List> resultMap = new HashMap();

@@ -1,9 +1,9 @@
-package cn.bbzzzs.mysql.handler.dao.support.support;
+package cn.bbzzzs.mysql.handler.dao.support.pom.springdatajpa;
 
 import cn.bbzzzs.common.util.StringUtils;
-import cn.bbzzzs.mysql.handler.dao.support.PomXmlHandler;
+import cn.bbzzzs.mysql.handler.dao.support.AbstractPomXml;
 
-public class SpringDataJpaPomXmlHandler extends PomXmlHandler {
+public class Pom extends AbstractPomXml {
 
     @Override
     protected void mapperDependencies(StringUtils.SBuilder sb) {
@@ -13,5 +13,4 @@ public class SpringDataJpaPomXmlHandler extends PomXmlHandler {
         sb.build("            <artifactId>spring-boot-starter-data-jpa</artifactId>\n");
         sb.build("        </dependency>\n");
     }
-
 }

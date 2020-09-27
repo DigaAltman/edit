@@ -12,8 +12,6 @@ public class MybatisHandler implements DaoHandler {
     @Override
     public Map<String, List> handle(DataBase dataBase, String tableName) {
 
-
-
         return null;
     }
 
