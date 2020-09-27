@@ -6,6 +6,8 @@ import cn.bbzzzs.db.factory.DBFactory;
 import cn.bbzzzs.mysql.common.DaoEnum;
 import cn.bbzzzs.mysql.factotry.ConnectionFactory;
 import cn.bbzzzs.mysql.handler.dao.DaoHandler;
+import cn.bbzzzs.mysql.handler.dao.support.applicationproperties.mybatis.Application;
+import cn.bbzzzs.mysql.handler.dao.support.pom.mybatis.Pom;
 import cn.bbzzzs.mysql.pojo.*;
 import cn.bbzzzs.mysql.repositoy.TableDao;
 import cn.bbzzzs.mysql.vo.TableDetailVo;
@@ -26,6 +28,33 @@ public class TableService {
      */
     private static final Map<DaoEnum, DaoHandler> daoEnumDaoHandlerMap = new HashMap();
     static {
+        cn.bbzzzs.mysql.handler.dao.support.mapper.mybatis.Mapper mybatisMapper = new cn.bbzzzs.mysql.handler.dao.support.mapper.mybatis.Mapper();
+        cn.bbzzzs.mysql.handler.dao.support.applicationproperties.mybatis.Application mybatisApplication = new cn.bbzzzs.mysql.handler.dao.support.applicationproperties.mybatis.Application();
+        cn.bbzzzs.mysql.handler.dao.support.pom.mybatis.Pom mybatisPom = new cn.bbzzzs.mysql.handler.dao.support.pom.mybatis.Pom();
+        mybatisPom.setDaoHandler(mybatisApplication);
+        mybatisApplication.setDaoHandler(mybatisMapper);
+        daoEnumDaoHandlerMap.put(DaoEnum.Mybatis, mybatisPom);
+
+        cn.bbzzzs.mysql.handler.dao.support.mapper.springdatajpa.Mapper jpaRepository = new cn.bbzzzs.mysql.handler.dao.support.mapper.springdatajpa.Mapper();
+        cn.bbzzzs.mysql.handler.dao.support.applicationproperties.springdatajpa.Application jpaApplication = new cn.bbzzzs.mysql.handler.dao.support.applicationproperties.springdatajpa.Application();
+        cn.bbzzzs.mysql.handler.dao.support.pom.springdatajpa.Pom jpaPom = new cn.bbzzzs.mysql.handler.dao.support.pom.springdatajpa.Pom();
+        jpaPom.setDaoHandler(jpaApplication);
+        jpaApplication.setDaoHandler(jpaRepository);
+        daoEnumDaoHandlerMap.put(DaoEnum.SpringDataJpa, jpaPom);
+
+        cn.bbzzzs.mysql.handler.dao.support.mapper.mybatisplus.Mapper mybatisPlusMapper = new cn.bbzzzs.mysql.handler.dao.support.mapper.mybatisplus.Mapper();
+        cn.bbzzzs.mysql.handler.dao.support.applicationproperties.mybatisplus.Application mybatisPlusApplication = new cn.bbzzzs.mysql.handler.dao.support.applicationproperties.mybatisplus.Application();
+        cn.bbzzzs.mysql.handler.dao.support.pom.mybatisplus.Pom mybatisPlusPom = new cn.bbzzzs.mysql.handler.dao.support.pom.mybatisplus.Pom();
+        mybatisPlusPom.setDaoHandler(mybatisPlusApplication);
+        mybatisPlusApplication.setDaoHandler(mybatisPlusMapper);
+        daoEnumDaoHandlerMap.put(DaoEnum.MybatisPlus, mybatisPlusPom);
+
+        cn.bbzzzs.mysql.handler.dao.support.mapper.springjdbc.Mapper jdbcMapper = new cn.bbzzzs.mysql.handler.dao.support.mapper.springjdbc.Mapper();
+        cn.bbzzzs.mysql.handler.dao.support.applicationproperties.springjdbc.Application jdbcApplication = new cn.bbzzzs.mysql.handler.dao.support.applicationproperties.springjdbc.Application();
+        cn.bbzzzs.mysql.handler.dao.support.pom.springjdbc.Pom jdbcPom = new cn.bbzzzs.mysql.handler.dao.support.pom.springjdbc.Pom();
+        jdbcPom.setDaoHandler(jdbcApplication);
+        jdbcApplication.setDaoHandler(jdbcMapper);
+        daoEnumDaoHandlerMap.put(DaoEnum.SpringJDBC, jdbcPom);
     }
 
     @Autowired
@@ -199,7 +228,7 @@ public class TableService {
     }
 
     // TODO 待实现, 持久化到 MySQL, 每个用户都有一个类型对应配置表. 可以配置sql对应的java类型
-    private Class sqlTypeToJavaType(String fieldType) {
+    public static Class sqlTypeToJavaType(String fieldType) {
         if (fieldType.startsWith("varchar")) {
             return String.class;
         } else if (fieldType.startsWith("char")) {
@@ -232,10 +261,21 @@ public class TableService {
      * 基于表结构生成 Repository/ Mapper / Dao 层
      * TODO 暂时还没有实现
      */
-    public String generateRepository(DataBase dataBase, String name, String daoName) {
+    public Map<String, List> generateRepository(DataBase dataBase, String name, String daoName) {
         DaoEnum daoEnum = DaoEnum.valueOf(daoName);
 
-        return null;
+        // 拿到表信息
+        TableDetail tableDetail = getTable(dataBase, name);
+
+        // 拿到表的字段结构
+        List<TableDetailVo> tableDetailVoList = getStructure(dataBase, name);
+
+        // 拿到对应的处理器
+        DaoHandler daoHandler = daoEnumDaoHandlerMap.get(daoEnum);
+
+        Map<String, List> result = daoHandler.handle(dataBase, tableDetail, tableDetailVoList);
+
+        return result;
     }
 
 

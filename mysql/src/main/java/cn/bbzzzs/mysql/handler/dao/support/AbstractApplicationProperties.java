@@ -3,7 +3,9 @@ package cn.bbzzzs.mysql.handler.dao.support;
 import cn.bbzzzs.common.util.StringUtils;
 import cn.bbzzzs.mysql.handler.dao.DaoHandler;
 import cn.bbzzzs.mysql.pojo.DataBase;
+import cn.bbzzzs.mysql.pojo.TableDetail;
 import cn.bbzzzs.mysql.util.SQLUtil;
+import cn.bbzzzs.mysql.vo.TableDetailVo;
 import lombok.Setter;
 
 import java.util.Arrays;
@@ -21,12 +23,10 @@ public abstract class AbstractApplicationProperties implements DaoHandler {
 
     /**
      * 处理 application.properties 中的通用配置
-     * @param dataBase  数据库对象
-     * @param tableName 表名称
      * @return
      */
     @Override
-    public Map<String, List> handle(DataBase dataBase, String tableName) {
+    public Map<String, List> handle(DataBase dataBase, TableDetail tableDetail, List<TableDetailVo> tableDetailVoList) {
         Map<String, List> resultMap = new HashMap();
         StringUtils.SBuilder sb = new StringUtils.SBuilder();
         sb.build("spring.datasource.url=", SQLUtil.buildUrl(dataBase), "\n");
@@ -37,7 +37,7 @@ public abstract class AbstractApplicationProperties implements DaoHandler {
         mapperApplication(sb);
 
         resultMap.put("application.properties", Arrays.asList(sb.toString()));
-        Map<String, List> childDaoResult = daoHandler.handle(dataBase, tableName);
+        Map<String, List> childDaoResult = daoHandler.handle(dataBase, tableDetail, tableDetailVoList);
         childDaoResult.forEach((k,v) -> resultMap.put(k, v));
         return resultMap;
     }
