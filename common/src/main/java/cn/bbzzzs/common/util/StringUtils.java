@@ -35,7 +35,7 @@ public class StringUtils {
      * @return 如果字符串是空格, 则返回false
      */
     public static boolean isEmpty(String str) {
-        return str == null || "".equals(str);
+        return str == null || "".equals(str.trim());
     }
 
     /**
