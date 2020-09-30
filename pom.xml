@@ -13,6 +13,7 @@
         <module>test</module>
         <module>xml</module>
         <module>db</module>
+        <module>mt</module>
     </modules>
     <groupId>cn.bbzzzs</groupId>
     <artifactId>edit</artifactId>

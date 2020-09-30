@@ -1,9 +1,14 @@
 package cn.bbzzzs.common.util;
 
 
+import com.google.common.collect.Lists;
+
 import java.io.*;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channel;
 import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -27,6 +32,7 @@ public class FileUtils {
      * @param file     文件
      * @param consumer 处理函数
      */
+    @Deprecated
     public static void readLine(File file, Consumer<String> consumer) {
         BufferedReader br = null;
         try {
@@ -46,6 +52,114 @@ public class FileUtils {
         }
     }
 
+
+    /**
+     * 推荐使用, 基于 NIO 的方式读取文件内容
+     *
+     * @param file     读取的文件
+     * @param encode   字符集
+     * @param consumer 每行内容执行的函数
+     */
+    public static int readLineByNIOSetEncode(File file, String encode, Consumer<String> consumer) {
+        // 将文件转换位 Channel
+        FileChannel channel = null;
+
+        // 存放读取的每行数据
+        List<String> dataList = Lists.newArrayList();
+
+        // 一次读取 8kb
+        ByteBuffer byteBuffer = ByteBuffer.allocate(8 * 1024);
+
+        // temp：由于是按固定字节读取，在一次读取中，第一行和最后一行经常是不完整的行，因此定义此变量来存储上次的最后一行和这次的第一行的内容，
+        // 并将之连接成完成的一行，否则会出现汉字被拆分成2个字节，并被提前转换成字符串而乱码的问题
+        byte[] bytes = new byte[0];
+
+        try {
+            channel = new FileInputStream(file).getChannel();
+            // 循环读取数据到缓冲区
+            while (channel.read(byteBuffer) != -1) {
+                // 读取结束后的位置，相当于读取的长度
+                int readLength = byteBuffer.position();
+                // 用来存放读取的内容的数组
+                byte[] bs = new byte[readLength];
+
+                // 读取数据到 bs 数组中
+                byteBuffer.rewind();
+                byteBuffer.get(bs);
+                byteBuffer.clear();
+
+                int startNum = 0;
+                // 换行符, 回车符
+                int LF = 10, CR = 13;
+                // 是否有换行符
+                boolean hasLF = false;
+
+                // 解析 bs 这个数组, 判断里面是否包含换行符
+                for (int i = 0; i < readLength; i++) {
+                    if (bs[i] == LF) {
+                        hasLF = true;
+                        int tempNum = bytes.length;
+                        int lineNum = i - startNum;
+                        // 数组大小已经去掉换行符
+                        byte[] lineByte = new byte[tempNum + lineNum];
+
+                        // 填充了lineByte[0]~lineByte[tempNum-1]
+                        System.arraycopy(bytes, 0, lineByte, 0, tempNum);
+
+                        bytes = new byte[0];
+                        // 填充lineByte[tempNum]~lineByte[tempNum+lineNum-1]
+                        System.arraycopy(bs, startNum, lineByte, tempNum, lineNum);
+
+                        //一行完整的字符串(过滤了换行和回车)
+                        String line = new String(lineByte, 0, lineByte.length, encode);
+                        dataList.add(line);
+
+                        //过滤回车符和换行符
+                        if (i + 1 < readLength && bs[i + 1] == CR) {
+                            startNum = i + 2;
+                        } else {
+                            startNum = i + 1;
+                        }
+                    }
+                }
+
+                if (hasLF) {
+                    bytes = new byte[bs.length - startNum];
+                    System.arraycopy(bs, startNum, bytes, 0, bytes.length);
+                } else {
+                    // 兼容单次读取的内容不足一行的情况
+                    byte[] toTemp = new byte[bytes.length + bs.length];
+                    System.arraycopy(bytes, 0, toTemp, 0, bytes.length);
+                    System.arraycopy(bs, 0, toTemp, bytes.length, bs.length);
+                    bytes = toTemp;
+                }
+            }
+
+            // 兼容文件最后一行没有换行的情况
+            if(bytes != null && bytes.length > 0){
+                String line = new String(bytes, 0, bytes.length, encode);
+                dataList.add(line);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                channel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        dataList.forEach(consumer::accept);
+        return dataList.size();
+    }
+
+    private static ByteBuffer reAllocate(ByteBuffer stringBuffer) {
+        final int capacity = stringBuffer.capacity();
+        byte[] newBuffer = new byte[capacity * 2];
+        System.arraycopy(stringBuffer.array(), 0, newBuffer, 0, capacity);
+        return (ByteBuffer) ByteBuffer.wrap(newBuffer).position(capacity);
+    }
 
     /**
      * 读取文件, 并处理每行的结果
@@ -138,7 +252,6 @@ public class FileUtils {
 
     /**
      * 通过包名获取源代码的路径
-     * <p>
      * 比如: com.example.entity -> 项目路径/src/main/java/com/example/entity/
      *
      * @return 返回源代码的所在路径
@@ -226,5 +339,25 @@ public class FileUtils {
         return packageValue + FileUtils.PACKAGE_SPERACTOR + projectValue;
     }
 
+    public static int readLineByNIO(File file, Consumer<String> consumer) {
+        return readLineByNIOSetEncode(file, "UTF-8", consumer);
+    }
 
+    /**
+     * 读取文件的所有内容
+     *
+     * @param file
+     * @return
+     */
+    public static String readFile(File file) {
+        StringBuilder res = new StringBuilder();
+        readLine(file, line -> res.append(line).append("\n"));
+        return res.toString();
+    }
+
+    public static void main(String[] args) {
+        FileUtils.readLine(new File("D:\\oracle-recovery\\download\\inbound\\2020-360781000.2020-09-01.dmp"), line -> {
+            System.out.println(line);
+        });
+    }
 }
