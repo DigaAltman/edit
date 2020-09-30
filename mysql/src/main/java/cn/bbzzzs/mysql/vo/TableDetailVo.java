@@ -1,8 +1,10 @@
 package cn.bbzzzs.mysql.vo;
 
+import cn.bbzzzs.common.util.StringUtils;
 import cn.bbzzzs.mysql.pojo.TableFieldComment;
 import cn.bbzzzs.mysql.pojo.TableIndex;
 import cn.bbzzzs.mysql.pojo.TableStructure;
+import cn.bbzzzs.mysql.service.TableService;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,8 +18,17 @@ public class TableDetailVo implements Serializable {
     // 字段名称
     private String fieldName;
 
+    // 字段名称对应的实体类字段名称
+    private String paramName;
+
+    // 查询的时候的实体类名称首字母大写后
+    private String queryParamName;
+
     // 字段类型
     private String fieldType;
+
+    // 字段类型对应的 java 类型
+    private Class fieldClassType;
 
     // 是否允许为Null
     private boolean allowNull;
@@ -81,6 +92,10 @@ public class TableDetailVo implements Serializable {
                 break;
             }
         }
+
+        detailVo.setParamName(StringUtils.hump(detailVo.getFieldName()));
+        detailVo.setQueryParamName(StringUtils.humpFirstUpper(detailVo.getFieldName()));
+        detailVo.setFieldClassType(TableService.sqlTypeToJavaType(detailVo.getFieldType()));
 
         return detailVo;
     }

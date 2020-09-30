@@ -18,6 +18,6 @@ public class Pom extends AbstractPomXml {
         sb.build("            <groupId>com.github.pagehelper</groupId>\n");
         sb.build("            <artifactId>pagehelper-spring-boot-starter</artifactId>\n");
         sb.build("            <version>1.2.5</version>\n");
-        sb.build("        </dependency>\n");
+        sb.build("        </dependency>\n\n");
     }
 }

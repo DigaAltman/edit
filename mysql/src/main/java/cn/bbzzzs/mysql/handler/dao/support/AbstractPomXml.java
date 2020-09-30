@@ -3,6 +3,8 @@ package cn.bbzzzs.mysql.handler.dao.support;
 import cn.bbzzzs.common.util.StringUtils;
 import cn.bbzzzs.mysql.handler.dao.DaoHandler;
 import cn.bbzzzs.mysql.pojo.DataBase;
+import cn.bbzzzs.mysql.pojo.TableDetail;
+import cn.bbzzzs.mysql.vo.TableDetailVo;
 import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -21,7 +23,7 @@ public abstract class AbstractPomXml implements DaoHandler {
     protected DaoHandler daoHandler;
 
     @Override
-    public Map<String, List> handle(DataBase dataBase, String tableName) {
+    public Map<String, List> handle(DataBase dataBase, TableDetail tableDetail, List<TableDetailVo> tableDetailVoList) {
         Map<String, List> res = new HashMap();
         StringUtils.SBuilder sb = new StringUtils.SBuilder();
         sb.build("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
@@ -55,7 +57,7 @@ public abstract class AbstractPomXml implements DaoHandler {
         sb.build("    </properties>\n\n");
 
         // 依赖配置部分， 针对 Jpa， Mybatis, Mybatis Plus, SpringJdbc, DB.依赖是不一样的
-        sb.build("    <dependencies>\n");
+        sb.build("    <dependencies>\n\n");
         sb.build("        <!-- web模块 -->\n");
         sb.build("        <dependency>\n");
         sb.build("            <groupId>org.springframework.boot</groupId>\n");
@@ -76,7 +78,7 @@ public abstract class AbstractPomXml implements DaoHandler {
         mapperDependencies(sb);
 
         sb.build("        <!--数据库相关-->\n");
-        sb.build("        <dependency>");
+        sb.build("        <dependency>\n");
         sb.build("            <groupId>mysql</groupId>\n");
         sb.build("            <artifactId>mysql-connector-java</artifactId>\n");
         sb.build("        </dependency>\n\n");
@@ -96,7 +98,7 @@ public abstract class AbstractPomXml implements DaoHandler {
 
         res.put("pom.xml", Lists.newArrayList(sb.toString()));
 
-        Map<String, List> kvMap = daoHandler.handle(dataBase, tableName);
+        Map<String, List> kvMap = daoHandler.handle(dataBase, tableDetail, tableDetailVoList);
         kvMap.forEach((k, v) -> res.put(k, v));
         return res;
     }

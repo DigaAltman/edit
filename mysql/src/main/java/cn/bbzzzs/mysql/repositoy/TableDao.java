@@ -1,5 +1,6 @@
 package cn.bbzzzs.mysql.repositoy;
 
+import cn.bbzzzs.common.util.StringUtils;
 import cn.bbzzzs.db.factory.DB;
 import cn.bbzzzs.db.result.bean.Result;
 import cn.bbzzzs.db.result.bean.ResultMap;
@@ -50,7 +51,9 @@ public class TableDao {
         resultMap.getResultList().add(new Result().setColumn("Comment").setProperty("Comment"));
         resultMap.getResultList().add(new Result().setColumn("Collation").setProperty("Collation"));
 
-        return db.selectOne("show table status where Name=?", resultMap, tableName);
+        TableDetail tableDetail = db.selectOne("show table status where Name=?", resultMap, tableName);
+        tableDetail.setTableName(StringUtils.humpFirstUpper(tableDetail.getName()));
+        return tableDetail;
     }
 
     /**

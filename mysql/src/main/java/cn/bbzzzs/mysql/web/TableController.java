@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/table")
@@ -50,6 +51,13 @@ public class TableController {
         return tableService.generateEntity(dataBase, table);
     }
 
-
+    /**
+     * 获取生成的持久层代码
+     */
+    @PostMapping("/mapper/{table}")
+    public Map<String, List> getMapper(@RequestBody DataBase dataBase, @PathVariable String table, @RequestParam(value = "daoName", defaultValue = "Mybatis") String daoName) {
+        // 默认为 Mybatis
+        return tableService.generateRepository(dataBase, table, daoName);
+    }
 
 }

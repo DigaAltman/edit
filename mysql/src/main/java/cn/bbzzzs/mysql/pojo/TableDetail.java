@@ -11,6 +11,9 @@ public class TableDetail implements Serializable {
     // 数据表名称
     private String Name;
 
+    // 对应的是实体类名称
+    private String tableName;
+
     // 数据表引擎
     private String Engine;
 
@@ -19,7 +22,6 @@ public class TableDetail implements Serializable {
 
     // 行格式。对于MyISAM引擎，这可能是Dynamic，Fixed或Compressed。动态行的行长度可变，例如Varchar或Blob类型字段。固定行是指行长度不变，例如Char和Integer类型字段。
     private String RowFormat;
-
 
     // 表中的行数。对于非事务性表，这个值是精确的，对于事务性引擎，这个值通常是估算的。
     private BigInteger Rows;

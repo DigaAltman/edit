@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Service
 public class Mapper extends AbstractMapper {
 
     @Override
@@ -168,18 +167,20 @@ public class Mapper extends AbstractMapper {
         return null;
     }
 
+
     /**
      * 生成 mybatis 的 mapper.xml 文件
      *
      * @return
      */
     private String generateMapperXml(TableDetail tableDetail, List<TableDetailVo> tableDetailVoList) {
-        String tableName = tableDetail.getName();
-        String name = StringUtils.humpFirstUpper(tableName);
-        String namespace = String.format("com.example.mapper.%sMapper", name);
+        // 得到此 mapper 文件的命名空间 <mapper namespace="xxx"></mapper>
+        String namespace = String.format("com.example.mapper.%sMapper", tableDetail.getTableName());
 
         StringUtils.SBuilder sb = new StringUtils.SBuilder();
-        String resultMap = name + "Map";
+
+        // 得到 <resultMap id="xxx"> </resultMap>
+        String resultMap = StringUtils.hump(tableDetail.getName()) + "Map";
         sb
                 .build("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n")
                 .build("<!DOCTYPE mapper PUBLIC \"-//mybatis.org//DTD Mapper 3.0//EN\" \"http://mybatis.org/dtd/mybatis-3-mapper.dtd\">\n")
@@ -198,6 +199,8 @@ public class Mapper extends AbstractMapper {
 
                 if (keyEnum == KeyEnum.PRI) {
                     sb.build("        <id property=\"").build(StringUtils.hump(columnName)).build("\" column=\"").build(columnName).build("\"/>\n");
+                } else {
+                    sb.build("        <result property=\"", StringUtils.hump(columnName), "\" column=\"", columnName, "\"/>\n");
                 }
             }
 
@@ -218,7 +221,7 @@ public class Mapper extends AbstractMapper {
         sb.build("    </sql>\n");
 
         // 定义常用的基于主键的 CRUD 方法
-        List<TableDetailVo> priList = tableDetailVoList.stream().filter(v -> KeyEnum.valueOf(v.getKey()) == KeyEnum.PRI).collect(Collectors.toList());
+        List<TableDetailVo> priList = tableDetailVoList.stream().filter(v -> !StringUtils.isEmpty(v.getKey()) && KeyEnum.valueOf(v.getKey()) == KeyEnum.PRI).collect(Collectors.toList());
 
         sb.build("    <!-- 新增 方法 -->\n")
                 .build("    <insert id=\"insert\" parameterType=\"").build("com.example.pojo.", name).build("\">\n")
