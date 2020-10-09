@@ -3,6 +3,7 @@
         "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="*">
+
     <resultMap id="course" type="cn.bbzzzs.db.test.pojo.Course">
         <id column="course_id" property="courseId"/>
         <result column="course_name" property="courseName"/>
@@ -17,4 +18,5 @@
         <result column="student_address" property="studentAddress"/>
         <association property="course" ref="course"/>
     </resultMap>
+
 </mapper>

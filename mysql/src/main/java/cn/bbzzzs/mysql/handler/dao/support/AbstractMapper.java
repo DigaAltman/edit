@@ -21,7 +21,7 @@ public abstract class AbstractMapper implements DaoHandler {
     protected DaoHandler daoHandler;
 
     // 主键索引字段
-    protected TableDetailVo ID;
+    protected List<TableDetailVo> ID_INDEX = Lists.newLinkedList();
 
     // 唯一索引字段
     protected List<TableDetailVo> ONLY_INDEX = Lists.newArrayList();
@@ -29,23 +29,53 @@ public abstract class AbstractMapper implements DaoHandler {
     // 普通索引或联合索引字段
     protected Map<String, List<TableDetailVo>> MNL_INDEX = Maps.newLinkedHashMap();
 
+    // 普通字段
+    protected List<TableDetailVo> BASIC = Lists.newLinkedList();
+
+    // mapper 包管理部分 | TODO 日后修改
+    protected String MAPPER_PACKAGE_PATH = "com.example.mapper";
+
+    // entity 包管理部分 | TODO 日后修改
+    protected String ENTITY_PACKAGE_PATH = "com.example.pojo";
+
+    protected Set<Class> needClassSet = new HashSet();
+
+    // 实体类名称
+    protected String ENTITY_NAME = "";
+
+    // 持久层名称
+    protected String MAPPER_NAME = "";
+
     /**
      * 填充上面的属性
      */
     public void fullProperties(TableDetail tableDetail, List<TableDetailVo> tableDetailVoList) {
         List<TableDetailVo> keyDetails = tableDetailVoList.stream().filter(tableDetailVo -> !StringUtils.isEmpty(tableDetailVo.getKey())).collect(Collectors.toList());
+        tableDetailVoList.stream().filter(tableDetailVo -> StringUtils.isEmpty(tableDetailVo.getKey())).forEach(BASIC::add);
         List<TableDetailVo> idDetails = keyDetails.stream().filter(tableDetailVo -> KeyEnum.valueOf(tableDetailVo.getKey()) == KeyEnum.PRI).collect(Collectors.toList());
+        ENTITY_NAME = StringUtils.humpFirstUpper(tableDetail.getTableName());
+        MAPPER_NAME = ENTITY_NAME + "Mapper";
 
         // 初始化主键索引
-        if (idDetails.size() > 0) {
-            ID = idDetails.get(0);
-        }
+        idDetails.stream().forEach(tableDetailVo -> {
+            if (KeyEnum.PRI == KeyEnum.valueOf(tableDetailVo.getKey())) {
+                ID_INDEX.add(tableDetailVo);
+            }
+        });
+
+        ID_INDEX.forEach(id -> {
+            keyDetails.remove(id);
+        });
 
         // 初始化唯一索引
         keyDetails.stream().forEach(tableDetailVo -> {
             if (KeyEnum.UNI == KeyEnum.valueOf(tableDetailVo.getKey())) {
                 ONLY_INDEX.add(tableDetailVo);
             }
+        });
+
+        ONLY_INDEX.forEach(one -> {
+            keyDetails.remove(one);
         });
 
         // 初始化普通索引
@@ -76,6 +106,8 @@ public abstract class AbstractMapper implements DaoHandler {
     }
 
     /**
+     * 由于抽象类只能解决 package 和 import. 所以后续的代码还是要交给子类实现
+     *
      * @param tableDetail       数据表
      * @param tableDetailVoList 数据表中的字段
      */
