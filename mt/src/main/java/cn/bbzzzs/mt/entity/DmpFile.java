@@ -26,14 +26,24 @@ public class DmpFile implements Serializable {
     // ktr列表
     private List<String> kettleFileList = Lists.newLinkedList();
 
-    public String getKettleFileNames() {
+    public String getKettleFileNames(List<String> tableList) {
         StringBuilder res = new StringBuilder();
         for (int i = 0; i < kettleFileList.size(); i++) {
-            res.append(kettleFileList.get(i));
-            if (i != kettleFileList.size() - 1) {
-                res.append(",");
+            String s = kettleFileList.get(i);
+            if (tableList.contains(s)) {
+                res.append(s).append(".ktr");
+                if (i != kettleFileList.size() - 1) {
+                    res.append(",");
+                }
             }
         }
         return res.toString();
+    }
+
+    public DmpFile buildID() {
+        String name = file.getName();
+        int index = name.lastIndexOf(".");
+        this.ID = name.substring(0, index);
+        return this;
     }
 }

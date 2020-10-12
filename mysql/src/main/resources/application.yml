@@ -1,8 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:mysql://47.112.125.251:3306/db1?useSSL=false
-    username: db1
-    password: db1_1234
-    driver-class-name: com.mysql.jdbc.Driver
-server:
-  port: 3000

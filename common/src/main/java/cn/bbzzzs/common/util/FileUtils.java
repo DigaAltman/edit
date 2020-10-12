@@ -303,9 +303,7 @@ public class FileUtils {
      */
     public static void saveFile(File file, String data, boolean model) {
         if (!model) {
-            if (file.exists()) {
-                file.delete();
-            }
+            file.deleteOnExit();
         }
 
         BufferedWriter wr = null;

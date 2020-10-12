@@ -32,7 +32,7 @@ public class OracleRecovery implements Serializable {
 
         LogUtils.info("开始获取 %s 目录下的所有需要处理的 .dmp 后缀文件", file.getPath());
 
-        List<DmpFile> dmpFileList = Arrays.stream(file.listFiles()).filter(f -> f.getName().length() > 4 && "dmp".equals(f.getName().substring(f.getName().lastIndexOf(".") + 1))).map(f -> new DmpFile().setFile(f)).collect(Collectors.toList());
+        List<DmpFile> dmpFileList = Arrays.stream(file.listFiles()).filter(f -> f.getName().length() > 4 && "dmp".equals(f.getName().substring(f.getName().lastIndexOf(".") + 1))).map(f -> new DmpFile().setFile(f).buildID()).collect(Collectors.toList());
         if (dmpFileList.size() == 0) {
             throw new IllegalArgumentException("没有需要处理的dmp文件 ..");
         }

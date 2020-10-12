@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.bbzzzs</groupId>
-            <artifactId>xml</artifactId>
+            <artifactId>mysql</artifactId>
             <version>${version}</version>
         </dependency>
     </dependencies>
