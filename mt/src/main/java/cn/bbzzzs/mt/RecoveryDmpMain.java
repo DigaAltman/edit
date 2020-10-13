@@ -7,7 +7,6 @@ import cn.bbzzzs.db.factory.DB;
 import cn.bbzzzs.db.factory.DBFactory;
 import cn.bbzzzs.mt.entity.DmpFile;
 import cn.bbzzzs.mt.entity.OracleRecovery;
-import cn.bbzzzs.mysql.util.SQLUtil;
 
 import java.io.File;
 import java.io.IOException;

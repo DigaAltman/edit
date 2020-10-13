@@ -15,7 +15,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.bbzzzs</groupId>
-            <artifactId>mysql</artifactId>
+            <artifactId>orm</artifactId>
             <version>${version}</version>
         </dependency>
     </dependencies>

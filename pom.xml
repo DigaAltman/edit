@@ -8,13 +8,19 @@
     <modules>
         <module>common</module>
         <module>kafka</module>
-        <module>mysql</module>
+        <module>orm</module>
         <module>interpreter</module>
         <module>test</module>
         <module>xml</module>
         <module>db</module>
         <module>mt</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+    </dependencies>
     <groupId>cn.bbzzzs</groupId>
     <artifactId>edit</artifactId>
     <version>0.0.1.RELEASE</version>

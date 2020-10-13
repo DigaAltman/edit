@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * DB 工厂
@@ -14,7 +16,6 @@ import java.sql.SQLException;
 @Data
 public class DBFactory {
     private Connection connection;
-
     private ResultMapFactory factory = new DefaultResultMapFactory();
 
     private DBFactory() {
